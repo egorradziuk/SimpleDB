@@ -1,0 +1,15 @@
+-- Создание процедуры:
+USE `staff`;
+DROP procedure IF EXISTS `delete_employee`;
+
+DELIMITER $$
+USE `staff`$$
+CREATE PROCEDURE `delete_employee` (sn varchar(255))
+BEGIN
+	delete from employee where surename = sn;
+END$$
+
+DELIMITER ;
+
+-- Пример вызова процедуры:
+CALL delete_employee('Depp');

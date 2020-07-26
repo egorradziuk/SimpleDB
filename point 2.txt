@@ -1,0 +1,161 @@
+-- Создание схемы:
+CREATE SCHEMA `staff` ;
+
+-- Создание таблиц:
+CREATE TABLE `staff`.`task` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `description` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`));
+
+
+CREATE TABLE `staff`.`department` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `number` INT NOT NULL,
+  `phone` VARCHAR(8) NOT NULL,
+  PRIMARY KEY (`id`));
+
+
+CREATE TABLE `staff`.`project` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `number` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+
+CREATE TABLE `staff`.`employee` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `number` INT NOT NULL,
+  `surename` VARCHAR(45) NOT NULL,
+  `departmentId` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `departmentIdFK_idx` (`departmentId` ASC) VISIBLE,
+  CONSTRAINT `departmentIdFK`
+    FOREIGN KEY (`departmentId`)
+    REFERENCES `staff`.`department` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+	
+
+CREATE TABLE `staff`.`project_task` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `projectId` INT NOT NULL,
+  `taskId` INT NOT NULL,
+  INDEX `projectIdPK_idx` (`projectId` ASC) VISIBLE,
+  INDEX `taskIdPK_idx` (`taskId` ASC) VISIBLE,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `projectIdPK`
+    FOREIGN KEY (`projectId`)
+    REFERENCES `staff`.`project` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `taskIdPK`
+    FOREIGN KEY (`taskId`)
+    REFERENCES `staff`.`task` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+	
+
+CREATE TABLE `staff`.`department_project` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `departmentId` INT NOT NULL,
+  `projectId` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `departmentIDPK_idx` (`departmentId` ASC) VISIBLE,
+  INDEX `projectIDPK_idx` (`projectId` ASC) VISIBLE,
+  CONSTRAINT `departmentIdPKey`
+    FOREIGN KEY (`departmentId`)
+    REFERENCES `staff`.`department` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `projectIdPKey`
+    FOREIGN KEY (`projectId`)
+    REFERENCES `staff`.`project` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+
+
+-- Заполнение таблиц:
+INSERT INTO `staff`.`task`
+	(`description`)
+	VALUES
+	('a'), ('b'), ('c'), ('d'), ('e'), ('f'), ('g'), ('h'), ('i'), ('j');
+
+
+INSERT INTO `staff`.`department`
+	(`number`,
+	`phone`)
+	VALUES
+	(1,11-20-31),
+	(2,12-29-32),
+	(3,21-28-33),
+	(4,13-27-34),
+	(5,31-26-35),
+	(6,14-25-36),
+	(7,41-24-37),
+	(8,15-23-38),
+	(9,51-22-39),
+	(10,16-21-30);
+
+
+INSERT INTO `staff`.`employee`
+(`number`,
+`surename`,
+`departmentId`)
+VALUES
+(11,'Gleb',1),
+(12,'Ivanov',2),
+(13,'Smirnov',3),
+(14,'Soboleb',4),
+(15,'Sidorov',5),
+(16,'Bush',6),
+(17,'Clinton',3),
+(18,'Depp',2),
+(19,'Smith',6),
+(20,'Kutuzov',9);
+
+
+INSERT INTO `staff`.`project`
+(`number`,
+`name`)
+VALUES
+(1,'Космос'),
+(2,'Климат'),
+(3,'Явления'),
+(4,'Животные'),
+(5,'Растения'),
+(6,'Микроорганизмы'),
+(7,'Технологии'),
+(8,'Исследования'),
+(9,'Транспорт'),
+(10,'Алгоритмы');
+
+
+INSERT INTO `staff`.`department_project`
+(`departmentId`,
+`projectId`)
+VALUES
+(1,9),
+(1,1),
+(3,7),
+(6,6),
+(6,3),
+(7,8),
+(7,6),
+(7,1),
+(8,7),
+(8,4);
+
+INSERT INTO `staff`.`project_task`
+(`projectId`,
+`taskId`)
+VALUES
+(1,1),
+(3,2),
+(3,3),
+(4,4),
+(1,5),
+(6,6),
+(7,7),
+(8,8),
+(9,9),
+(1,10);

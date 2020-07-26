@@ -1,0 +1,36 @@
+-- а) вывести фамилии людей, которые на проекте
+select distinct e.surename
+from employee e, department d, department_project dp
+where dp.departmentId = d.id and e.departmentId = d.id;
+
+-- б) вывести фамилии людей, которые на проекте и без проекта
+select surename from employee;
+
+-- в) вывести фамилии людей, у кого больше одного проекта
+select e.surename
+from employee e, department d, department_project dp
+where dp.departmentId = d.id and e.departmentId = d.id
+group by e.surename
+having count(dp.departmentId) > 1;
+
+-- г) вывести кол-во всех людей
+select count(surename) from employee;
+
+-- д) вывести фамилии людей и их кол-во проектов
+select e.surename, count(dp.departmentId) as amount_projects
+from employee e, department d, department_project dp
+where dp.departmentId = d.id and e.departmentId = d.id
+group by e.surename;
+
+-- е) вывести фамилии людей название проекта и кол-во задач на нём, у кого больше одной задачи на проекте
+select e.surename, p.name, count(t.description) as tasks
+from employee e, department d, department_project dp, project_task pt, project p, task t
+where dp.departmentId = d.id and e.departmentId = d.id and dp.projectId = p.id and pt.projectId = p.id and pt.taskId = t.id
+group by e.surename, p.name
+having count(t.description) > 1;
+
+-- ж) вывести из всех людей, отсортированных в алфавитном порядке, двух последних
+select surename 
+from employee
+order by surename desc 
+limit 2;
